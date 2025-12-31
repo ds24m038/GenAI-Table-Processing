@@ -1,16 +1,27 @@
-# GenAI Table Processing
+# 🤖 GenAI Table Processing
 
-A Python Streamlit application for processing tabular data (Excel) using AI to enrich rows with generated content.
+> **Enrich your tabular data with AI-generated content**
 
-## Features
+A Python Streamlit application that processes Excel files row-by-row using OpenAI, adding AI-generated columns based on customizable prompts.
 
-- 📊 **Excel Upload**: Upload Excel files for AI processing
-- 🔧 **Configurable Steps**: Define multiple processing steps with custom prompts
-- 👁️ **Preview Mode**: Test with one row before processing all data
-- 📈 **Token Tracking**: Monitor token usage and estimated costs
-- 📥 **Download Results**: Export enriched data as Excel
+---
 
-## Installation
+## ✨ Features
+
+| Feature | Description |
+|---------|-------------|
+| 📊 **Excel Upload** | Drag-and-drop Excel files (`.xlsx`, `.xls`) for processing |
+| 🔧 **Multi-Step Processing** | Chain multiple AI prompts in sequence |
+| 🔗 **Dynamic Placeholders** | Reference any column with `{@ColumnName}` syntax |
+| 👁️ **Preview Mode** | Test on a single row before processing all data |
+| 📈 **Cost Tracking** | Real-time token usage and cost estimation |
+| 📥 **Export Results** | Download enriched Excel with `AI_` prefixed columns |
+
+---
+
+## 🚀 Quick Start
+
+### 1. Installation
 
 ```bash
 # Clone the repository
@@ -21,67 +32,147 @@ cd GenAI-Table-Processing
 pip install -r requirements.txt
 ```
 
-## Configuration
+### 2. Configuration
 
-Create a `.env` file in the root directory:
+Create a `.env` file in the project root:
 
 ```env
-OPENAI_API_KEY=your-openai-api-key-here
+OPENAI_API_KEY=sk-your-api-key-here
 ```
 
-## Usage
-
-### Run the Application
+### 3. Run the App
 
 ```bash
 streamlit run app.py
 ```
 
-The app will open in your browser at `http://localhost:8501`.
+Open your browser to **http://localhost:8501**
 
-### Quick Start
+---
 
-1. **Upload** an Excel file using the sidebar
-2. **Add processing steps** with prompts referencing your columns
-3. **Use placeholders** like `{@CustomerReview}` to inject row data
-4. **Preview** with one row to verify output
-5. **Process all** rows and download the enriched Excel
+## 📖 How It Works
 
-### Example: Sentiment Analysis
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  1. Upload Excel    →   Your data with columns like            │
+│                         ProductName, CustomerReview, Rating     │
+├─────────────────────────────────────────────────────────────────┤
+│  2. Configure       →   Define prompts using {@ColumnName}      │
+│     Prompts             placeholders to reference row data      │
+├─────────────────────────────────────────────────────────────────┤
+│  3. Process         →   AI analyzes each row and generates      │
+│                         structured JSON responses               │
+├─────────────────────────────────────────────────────────────────┤
+│  4. Download        →   Get enriched Excel with new AI_         │
+│                         prefixed columns added                  │
+└─────────────────────────────────────────────────────────────────┘
+```
 
-**Input columns**: `ProductName`, `CustomerReview`, `Rating`
+---
 
-**Processing Step**:
-- **Prompt**: 
-  ```
-  Analyze this review for {@ProductName}: "{@CustomerReview}"
-  Determine the sentiment and key points mentioned.
-  ```
-- **Output Fields**: `sentiment, keyPoints, customerResponse`
-- **Model**: `gpt-4o-mini`
+## 💡 Example Use Case: Product Review Analysis
 
-**Result**: New columns `AI_sentiment`, `AI_keyPoints`, `AI_customerResponse` added to the Excel file.
+### Input Excel
 
-## Project Structure
+| ProductID | ProductName | CustomerReview | Rating |
+|-----------|-------------|----------------|--------|
+| P001 | Wireless Mouse | Amazing! Super responsive and battery lasts forever. | 5 |
+| P002 | USB-C Hub | Gets hot after prolonged use. Ports are loose. | 3 |
+
+### Processing Step Configuration
+
+**Prompt:**
+```
+Analyze this customer review for {@ProductName}: "{@CustomerReview}"
+
+Determine:
+1. The overall sentiment (positive/neutral/negative)
+2. Key points mentioned by the customer
+3. A professional response to the customer
+```
+
+**Output Fields:** `sentiment, keyPoints, customerResponse`
+
+### Output Excel (with AI columns)
+
+| ProductID | ProductName | CustomerReview | Rating | AI_sentiment | AI_keyPoints | AI_customerResponse |
+|-----------|-------------|----------------|--------|--------------|--------------|---------------------|
+| P001 | Wireless Mouse | Amazing! Super responsive... | 5 | positive | Responsive, Long battery | Thank you for your feedback... |
+| P002 | USB-C Hub | Gets hot after prolonged use... | 3 | neutral | Overheating, Loose ports | We appreciate your honest... |
+
+---
+
+## 🗂️ Project Structure
 
 ```
 GenAI-Table-Processing/
-├── app.py                  # Streamlit frontend
+│
+├── app.py                      # Streamlit frontend application
+│
 ├── services/
-│   └── processing.py       # OpenAI processing service
+│   ├── __init__.py
+│   └── processing.py           # OpenAI API integration
+│
 ├── utils/
-│   └── prompt_helper.py    # Placeholder replacement utilities
+│   ├── __init__.py
+│   └── prompt_helper.py        # Placeholder replacement logic
+│
 ├── testing/
-│   └── example_input_output.xlsx  # Example file
-├── requirements.txt        # Python dependencies
-├── .env                    # API keys (not in git)
+│   └── example_input_output.xlsx   # Sample file for testing
+│
+├── requirements.txt            # Python dependencies
+├── .env                        # API keys (gitignored)
 └── README.md
 ```
 
-## Supported Models
+---
 
-| Model | Best For | Cost |
-|-------|----------|------|
-| `gpt-4o-mini` | Fast, cost-effective processing | $ |
-| `gpt-4o` | High-quality output | $$$ |
+## ⚙️ Supported Models
 
+| Model | Speed | Quality | Cost | Best For |
+|-------|-------|---------|------|----------|
+| `gpt-4o-mini` | ⚡ Fast | Good | $ | Large datasets, prototyping |
+| `gpt-4o` | Medium | Excellent | $$$ | Production, complex analysis |
+
+---
+
+## 🔧 Advanced Usage
+
+### Chaining Multiple Steps
+
+You can add multiple processing steps that build on each other:
+
+**Step 1:** Classify the review
+```
+Classify this review: "{@CustomerReview}"
+→ Output: category
+```
+
+**Step 2:** Generate response based on classification (references Step 1's output)
+```
+Write a response for this {@AI_category} review: "{@CustomerReview}"
+→ Output: response
+```
+
+### Conditional Logic
+
+Use the AI output from previous steps to guide subsequent processing. Each step can reference columns created by earlier steps using the `AI_` prefix.
+
+---
+
+## 📋 Requirements
+
+- Python 3.9+
+- OpenAI API key
+- Dependencies: `streamlit`, `pandas`, `openpyxl`, `openai`, `python-dotenv`
+
+---
+
+## 🐛 Troubleshooting
+
+| Issue | Solution |
+|-------|----------|
+| "OPENAI_API_KEY not found" | Ensure `.env` file exists with valid key |
+| Excel upload fails | Check file is `.xlsx` or `.xls` format |
+| Empty AI columns | Verify prompt uses correct `{@ColumnName}` syntax |
+| High costs | Use `gpt-4o-mini` and preview before full processing |
