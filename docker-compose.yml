@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  genai-table-processing:
+    build: .
+    container_name: genai-table-processing
+    ports:
+      - "8501:8501"
+    env_file:
+      - .env
+    volumes:
+      - ./testing:/app/testing # Mount testing folder for example files
+    restart: unless-stopped

@@ -50,6 +50,32 @@ Open your browser to **http://localhost:8501**
 
 ---
 
+## 🐳 Docker
+
+### Using Docker Compose (Recommended)
+
+```bash
+# Build and run
+docker-compose up --build
+
+# Run in background
+docker-compose up -d
+```
+
+### Using Docker Directly
+
+```bash
+# Build the image
+docker build -t genai-table-processing .
+
+# Run the container
+docker run -p 8501:8501 --env-file .env genai-table-processing
+```
+
+Access the app at **http://localhost:8501**
+
+---
+
 ## 📖 How It Works
 
 ```
