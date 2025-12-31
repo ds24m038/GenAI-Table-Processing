@@ -99,14 +99,12 @@ Respond with a JSON object containing these fields: {fields_description}"""
         """
         Estimate cost based on token usage.
         
-        Pricing (as of Dec 2024, approximate):
         - gpt-4o-mini: $0.15/1M input, $0.60/1M output
         - gpt-4o: $2.50/1M input, $10.00/1M output
         """
         pricing = {
             "gpt-4o-mini": {"input": 0.00015, "output": 0.0006},
             "gpt-4o": {"input": 0.0025, "output": 0.01},
-            "gpt-4-turbo": {"input": 0.01, "output": 0.03},
         }
         
         # Default to gpt-4o-mini pricing if model not found
