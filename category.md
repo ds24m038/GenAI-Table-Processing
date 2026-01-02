@@ -1,1 +1,1 @@
-GenAI + Data Acquisition Tooling
+Generative AI
